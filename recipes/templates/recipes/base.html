@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Кулинарная книга</title></head>
+<body>
+  <nav>
+    <a href="{% url 'recipe_list' %}">Список</a> |
+    <a href="{% url 'recipe_create' %}">Создать</a> |
+    <a href="{% url 'top_recipes' %}">Топ-10</a> |
+    <a href="/admin/">Админка</a>
+  </nav>
+  <hr>
+  {% block content %}{% endblock %}
+</body>
+</html>

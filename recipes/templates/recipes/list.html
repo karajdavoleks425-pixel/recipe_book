@@ -1,0 +1,63 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+<h1>Рецепты</h1>
+
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Поиск по названию">
+
+  <select name="category">
+    <option value="">Все категории</option>
+    {% for c in categories %}
+      <option value="{{ c.id }}" {% if selected_category == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="status">
+    <option value="">Все статусы</option>
+    {% for value, label in statuses %}
+      <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <fieldset>
+    <legend>Ингредиенты (должны быть все)</legend>
+    {% for ing in ingredients %}
+      <label>
+        <input type="checkbox" name="ingredients" value="{{ ing.id }}"
+               {% if ing.id|stringformat:'s' in selected_ingredients %}checked{% endif %}>
+        {{ ing.name }}
+      </label>
+    {% endfor %}
+  </fieldset>
+
+  <button type="submit">Фильтровать</button>
+</form>
+
+{% for recipe in page_obj %}
+  <div>
+    <h3><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.title }}</a></h3>
+    <p>Категория: {{ recipe.category.name }}</p>
+    <p>Автор: {{ recipe.author.username }}</p>
+    <p>Статус: {{ recipe.get_status_display }}</p>
+    <p>Ингредиенты:
+      {% for ing in recipe.ingredients.all %}
+        {{ ing.name }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+    <a href="{% url 'recipe_update' recipe.pk %}">Редактировать</a> |
+    <a href="{% url 'recipe_delete' recipe.pk %}">Удалить</a>
+  </div>
+{% empty %}
+  <p>Ничего не найдено.</p>
+{% endfor %}
+
+<div>
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">← Назад</a>
+  {% endif %}
+  Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Вперёд →</a>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+<h1>Топ-10 рецептов по числу ингредиентов</h1>
+<ol>
+  {% for r in top_recipes %}
+    <li>{{ r.title }} — {{ r.ing_count }} ингр.</li>
+  {% endfor %}
+</ol>
+{% endblock %}git add .

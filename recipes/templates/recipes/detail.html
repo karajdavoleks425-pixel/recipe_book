@@ -1,0 +1,23 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+<h1>{{ recipe.title }}</h1>
+<p>Категория: {{ recipe.category.name }} | Автор: {{ recipe.author.username }}</p>
+<p>{{ recipe.description }}</p>
+
+<h2>Ингредиенты на {{ requested_servings }} порц.</h2>
+<form method="get">
+  <label>Порций:
+    <input type="number" name="servings" min="1" value="{{ requested_servings }}">
+  </label>
+  <button type="submit">Пересчитать</button>
+</form>
+<ul>
+  {% for ing in scaled_ingredients %}
+    <li>{{ ing.name }} — {{ ing.amount }} {{ ing.unit }}</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'recipe_update' recipe.pk %}">Редактировать</a> |
+<a href="{% url 'recipe_delete' recipe.pk %}">Удалить</a> |
+<a href="{% url 'recipe_list' %}">Назад</a>
+{% endblock %}
